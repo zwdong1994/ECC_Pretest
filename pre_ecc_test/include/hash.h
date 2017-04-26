@@ -8,9 +8,12 @@
 
 
 #include <iostream>
-
+#include <algorithm>
+#include <set>
+#include <string>
 #include "tpdef.h"
 #include "md5.h"
+#include "sha1.h"
 #include "sha256.h"
 
 #define READ_LENGTH 4096
@@ -22,6 +25,7 @@ public:
 
     uint8_t md5_file_comp(char *filename);
     uint8_t sha256_file_comp(char *filename);
+    uint8_t sha1_file_comp(char *filename);
     uint8_t ecc_file_comp(char *filename, char *dev_name);
     uint8_t string_convert_uint64(uint8_t *content, uint64_t *num); //default length of content is 4
 
@@ -32,6 +36,10 @@ public:
     uint64_t chunk_num;
     double time_total;
     double time_aver;
+
+private:
+    std::set<std::string> list;
+    uint64_t chunk_not_dup;
 
 };
 

@@ -13,14 +13,26 @@ tpdef.h
 ./include/hash.h
 iostream
 -
+algorithm
+-
+set
+-
+string
+-
 tpdef.h
 ./include/tpdef.h
 md5.h
 ./include/md5.h
+sha1.h
+./include/sha1.h
 sha256.h
 ./include/sha256.h
 
 ./include/md5.h
+
+./include/sha1.h
+stdint.h
+./include/stdint.h
 
 ./include/sha256.h
 stdint.h

@@ -19,6 +19,7 @@ hash::hash() {
     chunk_num = 0;
     time_total = 0.0;
     time_aver = 0.0;
+    chunk_not_dup = 0;
 }
 
 hash::~hash() {
@@ -26,14 +27,19 @@ hash::~hash() {
         time_aver = time_total / chunk_num;
         std::cout <<std::endl<< "**************************"<<"This option's time performance***********************"<<std::endl;
         std::cout << "The total time is " << time_total <<"ms"<< std::endl;
-        std::cout << "The chunk number is " << chunk_num <<"ms"<< std::endl;
+        std::cout << "The chunk number is " << chunk_num << std::endl;
+        if(chunk_not_dup > 0){
+            std::cout << "The dedupe rate is " <<  (chunk_num - chunk_not_dup) * 100.0 / chunk_num <<"%"<<std::endl;
+            std::cout << "The not dedupe chunk number is " << chunk_not_dup << std::endl;
+        }
+
         std::cout << "The average time is " << time_aver <<"ms"<< std::endl<<std::endl;
     }
 }
 
 uint8_t hash::ecc_file_comp(char *filename, char *dev_name) {
     FILE *fp;
-    uint8_t chk_cont[4096];
+    uint8_t chk_cont[4097];
     uint64_t another_chk = 0;
     struct aiocb64 myaio;
     struct aiocb64 *cblist[1];
@@ -59,18 +65,19 @@ uint8_t hash::ecc_file_comp(char *filename, char *dev_name) {
     myaio.aio_offset = 0;
     aio_write64(&myaio);
     while (EINPROGRESS == aio_error64(&myaio )) ; //EINPROGRESS represent the request are not complete.
-
+    close(fd);
     sprintf(file_dir, "/mnt/cdrom/kernel/%s", filename);
     if((fp = fopen(file_dir, "r")) == NULL){
         std::cout<<"Open file error!The file name is: "<<filename<<std::endl;
         return 0;
     }
-    while(1){
+    while(!feof(fp)){
         memset(chk_cont, 0, READ_LENGTH);
-        if(fgets((char *)chk_cont, READ_LENGTH, fp) == NULL ){
+        fread(chk_cont, sizeof(char), READ_LENGTH, fp);
+/*        if(fgets((char *)chk_cont, READ_LENGTH, fp) == NULL ){
 //            std::cout<<"The file: "<<filename<<" ecc computation is already finished"<<std::endl;
             break;
-        }
+        }*/
         double elps_time = 0.0;
 
         stat_time = time_cpt.get_time();
@@ -96,6 +103,7 @@ uint8_t hash::ecc_file_comp(char *filename, char *dev_name) {
 //        std::cout<<"finish - start = "<<elps_time<<std::endl;
         time_cpt.cp_all(elps_time);
     }
+    fclose(fp);
     time_total += time_cpt.time_total;
     chunk_num += time_cpt.chunk_num;
     time_cpt.cp_aver(filename);
@@ -105,8 +113,9 @@ uint8_t hash::ecc_file_comp(char *filename, char *dev_name) {
 uint8_t hash::md5_file_comp(char *filename) {
     FILE *fp;
     uint8_t chk_cont[4096];
-    uint8_t hv[16];
+    uint8_t hv[17];
     double stat_time = 0.0, fin_time = 0.0;
+    std::string mid_str;
     cp_t time_cpt;
     char file_dir[256];
 
@@ -115,22 +124,25 @@ uint8_t hash::md5_file_comp(char *filename) {
         std::cout<<"Open file error!The file name is:"<<filename<<std::endl;
         return 0;
     }
-    while(1){
+    while(!feof(fp)){
         memset(chk_cont, 0, READ_LENGTH);
-        if(fgets((char *)chk_cont, READ_LENGTH, fp) == NULL ){
-//            std::cout<<"The file:"<<filename<<" md5 computation is already finished"<<std::endl;
-            break;
-        }
+        fread(chk_cont, sizeof(char), READ_LENGTH, fp);
         double elps_time = 0.0;
 
         stat_time = time_cpt.get_time();
 //md5 func
         md5(chk_cont, 4096, hv);
+        mid_str = (char *)hv;
 //md5 finish
         fin_time = time_cpt.get_time();
         elps_time = (fin_time - stat_time) * 1000;//ms
         time_cpt.cp_all(elps_time);
+        if(list.find(mid_str) == list.end()){
+            chunk_not_dup++;
+            list.insert(mid_str);
+        }
     }
+    fclose(fp);
     time_cpt.cp_aver(filename);
     time_total += time_cpt.time_total;
     chunk_num += time_cpt.chunk_num;
@@ -140,10 +152,11 @@ uint8_t hash::md5_file_comp(char *filename) {
 
 uint8_t hash::sha256_file_comp(char *filename) {
     FILE *fp;
-    uint8_t chk_cont[4096];
+    uint8_t chk_cont[4097];
     sha256_context ctx;
-    uint8_t hv[32];
+    uint8_t hv[33];
     double stat_time = 0.0, fin_time = 0.0;
+    std::string mid_str;
     cp_t time_cpt;
     char file_dir[256];
 
@@ -152,24 +165,69 @@ uint8_t hash::sha256_file_comp(char *filename) {
         std::cout<<"Open file error!The file name is:"<<file_dir<<std::endl;
         return 0;
     }
-    while(1){
+    while(!feof(fp)){
         memset(chk_cont, 0, READ_LENGTH);
-        if(fgets((char *)chk_cont, READ_LENGTH, fp) == NULL ){
-//            std::cout<<"The file:"<<filename<<" sha256 computation is already finished"<<std::endl;
-            break;
-        }
+        fread(chk_cont, sizeof(char), READ_LENGTH, fp);
         double elps_time = 0.0;
 
         stat_time = time_cpt.get_time();
 //sha256 func
         sha256_init(&ctx);
-        sha256_hash(&ctx, chk_cont, 4096);
+        sha256_hash(&ctx, chk_cont, (uint32_t)strlen((char *)chk_cont));
         sha256_done(&ctx, hv);
+        mid_str = (char *)hv;
 //sha256 finish
         fin_time = time_cpt.get_time();
         elps_time = (fin_time - stat_time) * 1000;//ms
         time_cpt.cp_all(elps_time);
+        if(list.find(mid_str) == list.end()){
+            chunk_not_dup++;
+            list.insert(mid_str);
+        }
+
+
     }
+    fclose(fp);
+    time_cpt.cp_aver(filename);
+    time_total += time_cpt.time_total;
+    chunk_num += time_cpt.chunk_num;
+    return 1;
+}
+
+uint8_t hash::sha1_file_comp(char *filename) {
+    FILE *fp;
+    uint8_t chk_cont[4096];
+    uint8_t result[21];
+    double stat_time = 0.0, fin_time = 0.0;
+    std::string mid_str;
+    cp_t time_cpt;
+    char file_dir[256];
+
+    sprintf(file_dir, "/mnt/cdrom/kernel/%s", filename);
+    if((fp = fopen(file_dir, "r")) == NULL){
+        std::cout<<"Open file error!The file name is:"<<file_dir<<std::endl;
+        return 0;
+    }
+    while(!feof(fp)){
+        memset(chk_cont, 0, READ_LENGTH);
+        fread(chk_cont, sizeof(char), READ_LENGTH, fp);
+        double elps_time = 0.0;
+
+        stat_time = time_cpt.get_time();
+//sha1 func
+        SHA1((char *)result, (char *)chk_cont, READ_LENGTH);
+        mid_str = (char *)result;
+//sha1 finish
+        fin_time = time_cpt.get_time();
+        elps_time = (fin_time - stat_time) * 1000;//ms
+        time_cpt.cp_all(elps_time);
+        if(list.find(mid_str) == list.end()){
+            chunk_not_dup++;
+            list.insert(mid_str);
+        }
+
+    }
+    fclose(fp);
     time_cpt.cp_aver(filename);
     time_total += time_cpt.time_total;
     chunk_num += time_cpt.chunk_num;

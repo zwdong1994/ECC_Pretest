@@ -8,6 +8,10 @@
 
 ./include/md5.h
 
+./include/sha1.h
+stdint.h
+./include/stdint.h
+
 ./include/sha256.h
 stdint.h
 -
@@ -23,6 +27,16 @@ stdint.h
 -
 md5.h
 /home/victor/zwd/pre_test_ECC/pre_ecc_test/sourcefile/md5.h
+
+/home/victor/zwd/pre_test_ECC/pre_ecc_test/sourcefile/sha1.c
+stdio.h
+-
+string.h
+-
+stdint.h
+-
+sha1.h
+/home/victor/zwd/pre_test_ECC/pre_ecc_test/sourcefile/sha1.h
 
 /home/victor/zwd/pre_test_ECC/pre_ecc_test/sourcefile/sha256.c
 string.h

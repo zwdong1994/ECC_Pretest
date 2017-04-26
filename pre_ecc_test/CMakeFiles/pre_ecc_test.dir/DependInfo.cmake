@@ -6,9 +6,15 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
   "/home/victor/zwd/pre_test_ECC/pre_ecc_test/sourcefile/md5.c" "/home/victor/zwd/pre_test_ECC/pre_ecc_test/CMakeFiles/pre_ecc_test.dir/sourcefile/md5.c.o"
+  "/home/victor/zwd/pre_test_ECC/pre_ecc_test/sourcefile/sha1.c" "/home/victor/zwd/pre_test_ECC/pre_ecc_test/CMakeFiles/pre_ecc_test.dir/sourcefile/sha1.c.o"
   "/home/victor/zwd/pre_test_ECC/pre_ecc_test/sourcefile/sha256.c" "/home/victor/zwd/pre_test_ECC/pre_ecc_test/CMakeFiles/pre_ecc_test.dir/sourcefile/sha256.c.o"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
+
+# Preprocessor definitions for this target.
+set(CMAKE_TARGET_DEFINITIONS_C
+  "_GLIBCXX_USE_CXX11_ABI=0"
+  )
 
 # The include file search paths:
 set(CMAKE_C_TARGET_INCLUDE_PATH
@@ -20,6 +26,11 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/home/victor/zwd/pre_test_ECC/pre_ecc_test/sourcefile/hash.cpp" "/home/victor/zwd/pre_test_ECC/pre_ecc_test/CMakeFiles/pre_ecc_test.dir/sourcefile/hash.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
+
+# Preprocessor definitions for this target.
+set(CMAKE_TARGET_DEFINITIONS_CXX
+  "_GLIBCXX_USE_CXX11_ABI=0"
+  )
 
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH

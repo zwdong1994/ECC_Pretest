@@ -17,7 +17,7 @@
 */
 #define SWAP_BYTES
 // #define USE_STD_MEMCPY
-//#define SELF_TEST 1
+#define SELF_TEST 1
 
 #ifdef USE_STD_MEMCPY
 #include <string.h>
