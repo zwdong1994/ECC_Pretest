@@ -11,6 +11,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <aio.h>
+#include <openssl/sha.h>
+#include <openssl/md5.h>
 
 #include "hash.h"
 #include "com_t.h"
@@ -131,7 +133,7 @@ uint8_t hash::md5_file_comp(char *filename) {
 
         stat_time = time_cpt.get_time();
 //md5 func
-        md5(chk_cont, 4096, hv);
+        MD5((unsigned char *)chk_cont, (size_t)4096, (unsigned char *)hv);
         mid_str = (char *)hv;
 //md5 finish
         fin_time = time_cpt.get_time();
@@ -153,7 +155,7 @@ uint8_t hash::md5_file_comp(char *filename) {
 uint8_t hash::sha256_file_comp(char *filename) {
     FILE *fp;
     uint8_t chk_cont[4097];
-    sha256_context ctx;
+
     uint8_t hv[33];
     double stat_time = 0.0, fin_time = 0.0;
     std::string mid_str;
@@ -172,10 +174,11 @@ uint8_t hash::sha256_file_comp(char *filename) {
 
         stat_time = time_cpt.get_time();
 //sha256 func
-        sha256_init(&ctx);
+        SHA256((unsigned char *)chk_cont, (size_t)4096, (unsigned char *)hv);
+/*        sha256_init(&ctx);
         sha256_hash(&ctx, chk_cont, (uint32_t)strlen((char *)chk_cont));
         sha256_done(&ctx, hv);
-        mid_str = (char *)hv;
+        mid_str = (char *)hv;*/
 //sha256 finish
         fin_time = time_cpt.get_time();
         elps_time = (fin_time - stat_time) * 1000;//ms
@@ -215,7 +218,7 @@ uint8_t hash::sha1_file_comp(char *filename) {
 
         stat_time = time_cpt.get_time();
 //sha1 func
-        SHA1((char *)result, (char *)chk_cont, READ_LENGTH);
+        SHA1((unsigned char *)result, (size_t)READ_LENGTH, (unsigned char *)result);
         mid_str = (char *)result;
 //sha1 finish
         fin_time = time_cpt.get_time();

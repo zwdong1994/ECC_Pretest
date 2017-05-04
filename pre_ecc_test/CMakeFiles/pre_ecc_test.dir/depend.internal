@@ -13,9 +13,6 @@ CMakeFiles/pre_ecc_test.dir/sourcefile/sha256.c.o
 CMakeFiles/pre_ecc_test.dir/main.cpp.o
  ./include/com_t.h
  ./include/hash.h
- ./include/md5.h
- ./include/sha1.h
- ./include/sha256.h
  ./include/tpdef.h
  /home/victor/zwd/pre_test_ECC/pre_ecc_test/main.cpp
 CMakeFiles/pre_ecc_test.dir/sourcefile/com_t.cpp.o
@@ -25,8 +22,5 @@ CMakeFiles/pre_ecc_test.dir/sourcefile/com_t.cpp.o
 CMakeFiles/pre_ecc_test.dir/sourcefile/hash.cpp.o
  ./include/com_t.h
  ./include/hash.h
- ./include/md5.h
- ./include/sha1.h
- ./include/sha256.h
  ./include/tpdef.h
  /home/victor/zwd/pre_test_ECC/pre_ecc_test/sourcefile/hash.cpp

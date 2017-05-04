@@ -23,6 +23,7 @@ int main(int argc, char **argv) {
         std::cout<<"error:parameter is not completed!"<<std::endl;
         exit(0);
     }
+    
     strcpy(dir_name, argv[1]);
     if((dir = opendir(dir_name)) == NULL){
         std::cout<<"error:open director error!"<<std::endl;

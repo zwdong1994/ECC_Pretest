@@ -3,13 +3,13 @@
 
 # compile C with g++
 # compile CXX with /usr/bin/c++
-C_FLAGS =   -g -W -Wall -lrt -lpthread -Werror
+C_FLAGS =   -g -W -Wall -lrt -lcrypto -lpthread -Werror
 
 C_DEFINES = -D_GLIBCXX_USE_CXX11_ABI=0
 
 C_INCLUDES = -I/home/victor/zwd/pre_test_ECC/pre_ecc_test/./include 
 
-CXX_FLAGS =   -g -W -Wall -lrt -lpthread -Werror -std=gnu++11
+CXX_FLAGS =   -g -W -Wall -lrt -lcrypto -lpthread -Werror -std=gnu++11
 
 CXX_DEFINES = -D_GLIBCXX_USE_CXX11_ABI=0
 

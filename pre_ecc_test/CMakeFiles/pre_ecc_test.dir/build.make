@@ -221,6 +221,7 @@ pre_ecc_test: CMakeFiles/pre_ecc_test.dir/sourcefile/sha256.c.o
 pre_ecc_test: CMakeFiles/pre_ecc_test.dir/sourcefile/sha1.c.o
 pre_ecc_test: CMakeFiles/pre_ecc_test.dir/build.make
 pre_ecc_test: /usr/lib/x86_64-linux-gnu/librt.so
+pre_ecc_test: /usr/lib/x86_64-linux-gnu/libcrypto.a
 pre_ecc_test: CMakeFiles/pre_ecc_test.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/victor/zwd/pre_test_ECC/pre_ecc_test/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX executable pre_ecc_test"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/pre_ecc_test.dir/link.txt --verbose=$(VERBOSE)

@@ -11,10 +11,10 @@
 #include <algorithm>
 #include <set>
 #include <string>
+
 #include "tpdef.h"
-#include "md5.h"
-#include "sha1.h"
-#include "sha256.h"
+//#include "md5.h"
+//#include "sha256.h"
 
 #define READ_LENGTH 4096
 
