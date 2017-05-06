@@ -115,7 +115,7 @@ uint8_t hash::ecc_file_comp(char *filename, char *dev_name) {
 uint8_t hash::md5_file_comp(char *filename) {
     FILE *fp;
     uint8_t chk_cont[4096];
-    uint8_t hv[17];
+    uint8_t hv[17] = {0};
     double stat_time = 0.0, fin_time = 0.0;
     std::string mid_str;
     cp_t time_cpt;
@@ -156,7 +156,7 @@ uint8_t hash::sha256_file_comp(char *filename) {
     FILE *fp;
     uint8_t chk_cont[4097];
 
-    uint8_t hv[33];
+    uint8_t hv[33] = {0};
     double stat_time = 0.0, fin_time = 0.0;
     std::string mid_str;
     cp_t time_cpt;
@@ -177,8 +177,8 @@ uint8_t hash::sha256_file_comp(char *filename) {
         SHA256((unsigned char *)chk_cont, (size_t)4096, (unsigned char *)hv);
 /*        sha256_init(&ctx);
         sha256_hash(&ctx, chk_cont, (uint32_t)strlen((char *)chk_cont));
-        sha256_done(&ctx, hv);
-        mid_str = (char *)hv;*/
+        sha256_done(&ctx, hv);*/
+        mid_str = (char *)hv;
 //sha256 finish
         fin_time = time_cpt.get_time();
         elps_time = (fin_time - stat_time) * 1000;//ms
@@ -200,7 +200,7 @@ uint8_t hash::sha256_file_comp(char *filename) {
 uint8_t hash::sha1_file_comp(char *filename) {
     FILE *fp;
     uint8_t chk_cont[4096];
-    uint8_t result[21];
+    uint8_t result[21] = {0};
     double stat_time = 0.0, fin_time = 0.0;
     std::string mid_str;
     cp_t time_cpt;
@@ -219,6 +219,7 @@ uint8_t hash::sha1_file_comp(char *filename) {
         stat_time = time_cpt.get_time();
 //sha1 func
         SHA1((unsigned char *)result, (size_t)READ_LENGTH, (unsigned char *)result);
+        result[20] = '\0'; 
         mid_str = (char *)result;
 //sha1 finish
         fin_time = time_cpt.get_time();
