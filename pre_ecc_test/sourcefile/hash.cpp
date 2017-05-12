@@ -6,6 +6,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <errno.h>
 #include <time.h>
 #include <sys/time.h>
 #include <string.h>
@@ -113,7 +114,8 @@ uint8_t hash::ecc_file_comp(char *filename, char *dev_name) {
 uint8_t hash::md5_file_comp(char *filename) {
     FILE *fp;
     uint8_t chk_cont[4096];
-    uint8_t hv[17];
+    uint8_t hv[17] = {0};
+    char result[33] = {0};
     double stat_time = 0.0, fin_time = 0.0;
     std::string mid_str;
     cp_t time_cpt;
@@ -131,8 +133,11 @@ uint8_t hash::md5_file_comp(char *filename) {
 
         stat_time = time_cpt.get_time();
 //md5 func
+        memset(hv, 0, 17);
         md5(chk_cont, 4096, hv);
-        mid_str = (char *)hv;
+
+        ByteToHexStr(hv, result, 16);
+        mid_str = result;
 //md5 finish
         fin_time = time_cpt.get_time();
         elps_time = (fin_time - stat_time) * 1000;//ms
@@ -154,7 +159,8 @@ uint8_t hash::sha256_file_comp(char *filename) {
     FILE *fp;
     uint8_t chk_cont[4097];
     sha256_context ctx;
-    uint8_t hv[33];
+    uint8_t hv[33] = {0};
+    char result[65] = {0};
     double stat_time = 0.0, fin_time = 0.0;
     std::string mid_str;
     cp_t time_cpt;
@@ -172,10 +178,12 @@ uint8_t hash::sha256_file_comp(char *filename) {
 
         stat_time = time_cpt.get_time();
 //sha256 func
+        memset(hv, 0, 33);
         sha256_init(&ctx);
         sha256_hash(&ctx, chk_cont, (uint32_t)strlen((char *)chk_cont));
         sha256_done(&ctx, hv);
-        mid_str = (char *)hv;
+        ByteToHexStr(hv, result, 32);
+        mid_str = result;
 //sha256 finish
         fin_time = time_cpt.get_time();
         elps_time = (fin_time - stat_time) * 1000;//ms
@@ -197,7 +205,8 @@ uint8_t hash::sha256_file_comp(char *filename) {
 uint8_t hash::sha1_file_comp(char *filename) {
     FILE *fp;
     uint8_t chk_cont[4096];
-    uint8_t result[21];
+    uint8_t result[21] = {0};
+    char hex_result[41] = {0};
     double stat_time = 0.0, fin_time = 0.0;
     std::string mid_str;
     cp_t time_cpt;
@@ -215,8 +224,10 @@ uint8_t hash::sha1_file_comp(char *filename) {
 
         stat_time = time_cpt.get_time();
 //sha1 func
+        memset(result, 0, 21);
         SHA1((char *)result, (char *)chk_cont, READ_LENGTH);
-        mid_str = (char *)result;
+        ByteToHexStr(result, hex_result, 41);
+        mid_str = hex_result;
 //sha1 finish
         fin_time = time_cpt.get_time();
         elps_time = (fin_time - stat_time) * 1000;//ms
@@ -253,4 +264,29 @@ uint8_t hash::string_convert_uint64(uint8_t *content, uint64_t *num) {
     mid = (uint64_t)content[7];
     *num = *num ^ (mid<<56);
     return 1;
+}
+
+void hash::ByteToHexStr(const unsigned char *source, char *dest, int sourceLen) {
+    short i;
+    unsigned char highByte, lowByte;
+
+    for (i = 0; i < sourceLen; i++)
+    {
+        highByte = source[i] >> 4;
+        lowByte = source[i] & 0x0f ;
+
+        highByte += 0x30;
+
+        if (highByte > 0x39)
+            dest[i * 2] = highByte + 0x07;
+        else
+            dest[i * 2] = highByte;
+
+        lowByte += 0x30;
+        if (lowByte > 0x39)
+            dest[i * 2 + 1] = lowByte + 0x07;
+        else
+            dest[i * 2 + 1] = lowByte;
+    }
+    return ;
 }

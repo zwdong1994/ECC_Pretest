@@ -39,6 +39,7 @@ public:
 
 private:
     std::set<std::string> list;
+    void ByteToHexStr(const unsigned char* source, char* dest, int sourceLen);
     uint64_t chunk_not_dup;
 
 };

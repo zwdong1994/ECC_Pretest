@@ -99,6 +99,8 @@ sys/stat.h
 -
 fcntl.h
 -
+errno.h
+-
 time.h
 -
 sys/time.h
