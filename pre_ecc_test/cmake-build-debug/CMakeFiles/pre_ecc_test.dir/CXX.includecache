@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/victor/zwd/pre_test_ECC/pre_ecc_test/main.cpp
+iostream
+-
+
+/home/victor/zwd/pre_test_ECC/pre_ecc_test/sourcefile/hash.cpp
+iostream
+-
+time.h
+-
+sys/time.h
+-
+string.h
+-
+unistd.h
+-
+hash.h
+/home/victor/zwd/pre_test_ECC/pre_ecc_test/sourcefile/hash.h
+tpdef.h
+/home/victor/zwd/pre_test_ECC/pre_ecc_test/sourcefile/tpdef.h
+
