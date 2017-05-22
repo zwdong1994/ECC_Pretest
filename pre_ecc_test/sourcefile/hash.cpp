@@ -81,7 +81,8 @@ uint8_t hash::ecc_file_comp(char *filename, char *dev_name, char *dir_name) {
     }
     while(!feof(fp)){
         memset(chk_cont, 0, READ_LENGTH);
-        fread(chk_cont, sizeof(char), READ_LENGTH, fp);
+        if(fread(chk_cont, sizeof(char), READ_LENGTH, fp) == 0)
+            break;
 /*        if(fgets((char *)chk_cont, READ_LENGTH, fp) == NULL ){
 //            std::cout<<"The file: "<<filename<<" ecc computation is already finished"<<std::endl;
             break;
@@ -101,11 +102,13 @@ uint8_t hash::ecc_file_comp(char *filename, char *dev_name, char *dir_name) {
         }
 //bch end
         double elps_time = 0.0;
-
+        uint64_t xor_num = 0;
+        int i;
+        cblist[0] = &myaio;
         stat_time = time_cpt.get_time();
 //read overhead
 //        xor1 = time_cpt.get_time();
-        cblist[0] = &myaio;
+
         aio_read64(&myaio);
         aio_suspend64(cblist, 1, NULL);
 //        xor2 = time_cpt.get_time();
@@ -113,8 +116,8 @@ uint8_t hash::ecc_file_comp(char *filename, char *dev_name, char *dir_name) {
 //read over
 //xor start
 
-        for(int i=0; i < 512; i++) {
-            uint64_t xor_num = 0;
+        for(i=0; i < 512; i++) {
+
             string_convert_uint64(chk_cont + i * 8, &xor_num);
             another_chk = another_chk ^ xor_num;
         }
@@ -149,7 +152,8 @@ uint8_t hash::md5_file_comp(char *filename, char *dir_name) {
     }
     while(!feof(fp)){
         memset(chk_cont, 0, READ_LENGTH);
-        fread(chk_cont, sizeof(char), READ_LENGTH, fp);
+        if(fread(chk_cont, sizeof(char), READ_LENGTH, fp) == 0)
+            break;
         double elps_time = 0.0;
         memset(hv, 0, 17);
         memset(result, 0, 33);
@@ -196,7 +200,8 @@ uint8_t hash::sha256_file_comp(char *filename, char *dir_name) {
     }
     while(!feof(fp)){
         memset(chk_cont, 0, READ_LENGTH);
-        fread(chk_cont, sizeof(char), READ_LENGTH, fp);
+        if(fread(chk_cont, sizeof(char), READ_LENGTH, fp) == 0)
+            break;
         double elps_time = 0.0;
         memset(hv, 0, 33);
         memset(result, 0, 65);
@@ -246,7 +251,8 @@ uint8_t hash::sha1_file_comp(char *filename, char *dir_name) {
     }
     while(!feof(fp)){
         memset(chk_cont, 0, READ_LENGTH);
-        fread(chk_cont, sizeof(char), READ_LENGTH, fp);
+        if(fread(chk_cont, sizeof(char), READ_LENGTH, fp) == 0)
+            break;
         double elps_time = 0.0;
 
         memset(result, 0, 21);
